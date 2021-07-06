@@ -1,0 +1,134 @@
+<!doctype html>
+<html>
+
+  <!-- HEAD -->
+  <!-- **** -->
+  <head>
+      <meta charset="utf-8">
+      <meta name="description" content="">
+      <title>D3 Labs</title>
+      <link rel="stylesheet" href="css/bootstrap.min.css">
+      <link rel="stylesheet" href="css/style.css">
+
+      <!-- STYLE -->
+      <!-- **** -->
+      <style type="text/css">
+        #circle {
+          stroke: black;
+          fill: #5C9165;
+        }
+      </style>
+  </head>
+
+  <!-- BODY -->
+  <!-- **** -->
+  <body>
+      <h1>D3 Labs | SVG Fundamentals</h1>
+      <div class="container">
+          <div class="row">
+              <div id="chart-area"></div>
+              <svg width="400" height="600">
+                <!-- Rectangle
+                  x, y - position of the top left corner of the rectangle.
+                  width, height - size of the rectangle.
+                  rx, ry - radius of the corners of the rectangle.
+                -->
+                <rect x="10" y="10" width="70" height="70" fill="#0E7121"/>
+                <rect x="90" y="10" width="70" height="70" rx="10" ry="10" fill="#0E7121"/>
+
+                <!-- Polygon
+                  points - list of points, each set (x and y coordinate) is separated by a comma.
+                -->
+                <polygon points="130, 20 135, 40
+                                 150, 40 140, 50
+                                 145, 65 130, 55
+                                 105, 65 110, 50
+                                 100, 40 115, 40" fill="#D5EAD9"/>
+
+                <!-- Circle
+                  r - radius of the circle.
+                  cx, cy - position of the center of the circle.
+                -->
+                <circle cx="205" cy="45" r="35" fill="#0E7121" id="circle"/>
+
+                <!-- Ellipse
+                  rx, ry - radius of the ellipse.
+                  cx, cy - position of the center of the ellipse.
+                -->
+                <ellipse cx="280" cy="45" rx="20" ry="32" fill="#0E7121"/>
+
+                <!-- Line
+                  x1, y1 - position of point 1.
+                  x2, y2 - position of point 2.
+                -->
+                <line x1="320" x2="380" y1="45" y2="55" stroke="#03280A" stroke-width="5"/>
+
+                <!-- Polyline
+                -->
+                <polyline points="15  150  15 110
+                                  60  110  60 150
+                                  105 150  105 110
+                                  150 110  150 150
+                                  195 150  195 110" fill="none" stroke="#03280A" stroke-width="5"/>
+                <polyline points="120 550 155 510 190 550"
+                 stroke="black" stroke-width="20" stroke-linecap="butt" fill="none" stroke-linejoin="miter"/>
+
+                <!-- Path
+                  Uppercase - absolute coordinates
+                  Lowercase - relative coordinates
+
+                  Line commands:
+                    M x,y: move to - specifies where the drawing should start.
+                    L x,y: line to - draws a line from the current position to a new position.
+                    Hx, Vy - draws a horizontal or vertical line.
+                    Z: close path - draws a straight line from the current position back to the first point of the path.
+                -->
+                <path d="M20,230 Q40,205 50,230 T90,230" fill="none" stroke="#4299AB" stroke-width="5"/>
+                <path d="M195,110 L240,110 V150 H285" fill="none" stroke="#42AB88" stroke-width="5"/>
+                <path d="M300 110 H345 V150 H300 Z" fill="#42AB88" stroke="#42AB88" stroke-width="5"/>
+
+                <!--
+                  Curve commands:
+                    M: start point; x, y: end point.
+
+                    C x1 y1, x2 y2, x y - cubic Bezier curve.
+                    S x2 y2, x y - several cubic Bezier curves stringed together.
+                    Q x1 y1, x y - quadratic Bezier curve.
+                    T x y - several quadratic Bezier curves stringed together.
+                -->
+                <path d="M130 230 C 120 250, 180 250, 170 230" fill="transparent" stroke="#4299AB" stroke-width="5"/>
+                <path d="M130 230 C 120 250, 180 250, 170 230" fill="transparent" stroke="#4299AB" stroke-width="5"/>
+                <path d="M200 240 C 225 190, 250 190, 280 240 S 160 190 320 230"
+                      fill="transparent" stroke="#4299AB" stroke-width="5" stroke-linecap="round" stroke-dasharray="20 10"/>
+
+                <path d="M20  330 Q 95 270 190 330" fill="transparent" stroke="#4264AB" stroke-width="5"/>
+                <path d="M230 310 Q 260 250 300 310 T370 310" fill="transparent" stroke="#4264AB" stroke-width="5"/>
+                <path d="M230 370 Q 260 310 300 370 T370 370" fill="transparent" stroke="#8942AB" stroke-width="5" stroke-dasharray="20 5"/>
+
+                <!--
+                    A rx ry x-axis-rotation large-arc-flag sweep-flag x y - arc.
+                -->
+                <path d="M10 490 L90 470
+                         A 10 10  0 0 1  190 450
+                         L 220 445
+                         A 30 50  -30 0 0  300 430
+                         L 330 425"
+                       fill="green" stroke="black" stroke-width="2" fill-opacity="0.5" stroke-opacity="0.8"/>
+
+
+                <!-- Text
+                -->
+                <text x="240" y="580">SVG Fundamentals</text>
+
+              </svg>
+          </div>
+      </div>
+
+  <!-- SCRIPTS -->
+  <!-- ****** -->
+  <script src="js/d3.min.js"></script>
+  <script src="js/main.js"></script>
+
+  </body>
+
+</html>
