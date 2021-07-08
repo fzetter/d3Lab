@@ -1,0 +1,18 @@
+svg {
+	margin: 20px;
+}
+
+h1 {
+	margin: 1em;
+	color: white;
+}
+
+body {
+	background-color: #131313;
+}
+
+svg {
+	background-color: #F5F5F5 !important;
+	margin: 2em;
+	float: left;
+}
