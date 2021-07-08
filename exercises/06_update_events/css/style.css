@@ -4,27 +4,25 @@
   display: block;
 }
 
-#logo {
-	height: 50px;
-}
-
 .navbar {
-	background-color: #D67F11;
+	background-color: #5693B8;
+	height: 6em;
+	border: none;
 }
 
-
-.navbar-brand {
-	height: 70px;
-	padding: 5px 0px;
-}
-
-h1 {
+h1, h2 {
 	margin: 1em;
 	color: white;
+	font-family: sans-serif;
+	font-weight: 200;
+}
+
+h2 {
+	font-size: 30px;
 }
 
 body {
-	background-color: #1E1D1D;
+	background-color: #1B1A1A;
 }
 
 svg {
