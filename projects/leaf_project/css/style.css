@@ -1,7 +1,7 @@
 #chart-area svg {
 	margin-left: auto;
-    margin-right: auto;
-    display: block;
+  margin-right: auto;
+  display: block;
 }
 
 #logo {
@@ -11,4 +11,30 @@
 .navbar-brand {
 	height: 60px;
 	padding: 5px 0px;
+}
+
+.navbar {
+	background-color: white;
+	border: none;
+}
+
+h1, h2 {
+	margin: 1em;
+	color: white;
+	font-family: sans-serif;
+	font-weight: 200;
+}
+
+h2 {
+	font-size: 30px;
+}
+
+body {
+	background-color: #F7F7F7;
+}
+
+svg {
+	background-color: #28292A !important;
+	margin: 2em;
+	margin-top: 7% !important;
 }
