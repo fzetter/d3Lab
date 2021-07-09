@@ -1,0 +1,52 @@
+#chart-area svg {
+	margin-left: auto;
+  margin-right: auto;
+  display: block;
+}
+
+#logo {
+	height:50px;
+}
+
+.navbar-brand {
+	height: 60px;
+	padding: 5px 0px;
+}
+
+.navbar {
+	background-color: #150C79;
+	border: none;
+	border-radius: 0;
+}
+
+h1, h2 {
+	margin: 1em;
+	color: white;
+	font-family: sans-serif;
+	font-weight: 200;
+}
+
+h2 {
+	font-size: 30px;
+}
+
+label {
+	font-size: 14px;
+	font-family: sans-serif;
+	font-weight: 300;
+}
+
+.d3-tip {
+	font-size: 12px;
+	font-weight: 200;
+}
+
+body {
+	background-color: #F7F7F7;
+}
+
+svg {
+	background-color: #131313 !important;
+	margin: 2em;
+	margin-top: 7% !important;
+}
