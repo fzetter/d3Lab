@@ -13,6 +13,19 @@
   padding: 5px 0px;
 }
 
+.navbar {
+	background-color: #A80A0A;
+	border: none;
+	border-radius: 0;
+}
+
+.title {
+  margin-left: 3em;
+  color: white;
+  font-family: sans-serif;
+  font-weight: 200;
+}
+
 .axis {
   font: 10px sans-serif;
 }
@@ -40,7 +53,7 @@
   stroke: #777;
   stroke-width: 3px;
 }
-  
+
 .hover-line {
   stroke: #777;
   stroke-width: 2px;
@@ -56,4 +69,13 @@
   fill: none;
   stroke-width: 3px;
   stroke: grey;
+}
+
+body {
+	background-color: #F7F7F7;
+}
+
+svg {
+	background-color: #F7F7F7 !important;
+	margin-top: 3em;
 }
