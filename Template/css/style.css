@@ -4,15 +4,11 @@ svg {
 
 h1 {
 	margin: 1em;
-	color: white;
+	color: black;
 }
 
 body {
-	background-color: #032413;
-}
-
-.container {
-	/* background-color: #074012; */
+	background-color: #F4F4F6;
 }
 
 svg {

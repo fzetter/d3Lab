@@ -1,101 +1,141 @@
-/*
-*    main.js
-*/
+// Config
+const margin = {top: 100, right: 210, bottom: 100, left: 90}
+const width = 600, height = 400
 
-var margin ={top: 20, right: 300, bottom: 30, left: 50},
-    width = 800 - margin.left - margin.right,
-    height = 400 - margin.top - margin.bottom;
-    
-
-var svg = d3.select("#chart-area").append("svg")
-	.attr("width", width + margin.left + margin.right)
-    .attr("height", height + margin.top + margin.bottom);
-var g = svg.append("g")
-    .attr("transform", "translate(" + margin.left + 
-    	"," + margin.top + ")");
-
-// Time parser for x-scale
-var parseDate = d3.timeParse('%Y');
-var formatSi = d3.format(".3s");
-var formatNumber = d3.format(".1f"),
-formatBillion = (x) => { return formatNumber(x / 1e9); };
+const g = d3.select("#chart-area")
+	.append("svg")
+		.attr("width", width + margin.right + margin.left)
+		.attr("height", height + margin.top + margin.bottom)
+	.append("g")
+		.attr("transform", "translate(" + margin.left + ", " + margin.top + ")")
 
 // Scales
-var x = d3.scaleTime().rangeRound([0, width]);
-var y = d3.scaleLinear().rangeRound([height, 0]);
-var color = d3.scaleOrdinal(d3.schemeSpectral[11]);
+const x = d3.scaleTime().rangeRound([0, width])
+const y = d3.scaleLinear().rangeRound([0, height])
+const color_scale = d3.scaleOrdinal(d3.schemeSpectral[11])
 
-// Axis generators
-var xAxisCall = d3.axisBottom();
-var yAxisCall = d3.axisLeft().tickFormat(formatBillion);
+// Parse & Formatters
+const parseDate = d3.timeParse('%Y')
+const formatSi = d3.format(".3s")
+const formatNumber = d3.format(".1f")
+const formatBillion = x => formatNumber(x / 1e9)
 
-// Area generator
-// TODO: create the area generator. 
-// The x coordinate will be the date of the data
-// while y0 and y1 will be in the 0 and 1 positions of the d element
-// TODO: create the stack
+// Axis Generators
+const yAxis = d3.axisLeft(y).tickFormat(formatBillion)
+const xAxis = d3.axisBottom(x)
+const y_axis = g.append("g").attr("class", "y axis")
+const x_axis = g.append("g").attr("class", "x axis").attr("transform", "translate(0," + height + ")")
 
-// Axis groups
-var xAxis = g.append("g")
-	.attr("class", "x axis")
-    .attr("transform", "translate(0," + height + ")");
-var yAxis =  g.append("g")
-	.attr("class", "y axis");
-        
 // Y-Axis label
-yAxis.append("text")
-	.attr("class", "axis-title")
-    .attr("fill", "#000")
-    .attr("transform", "rotate(-90)")
+const y_label = y_axis.append("text")
+	  .attr("class", "axis-title")
     .attr("y", 6)
+    .attr("transform", "rotate(-90)")
     .attr("dy", "0.71em")
     .attr("text-anchor", "end")
-    .text("Billions of liters");
 
-// Legend code
-var legend = g.append("g")
-    .attr("transform", "translate(" + (width + 150) + 
-        "," + (height - 210) + ")");
+// Area Chart & Stack
+const area = d3.area()
+	.x(d => x(d.data.date))
+	.y0(d => y(d[0]))
+	.y1(d => y(d[1]))
 
-d3.csv('data/stacked_area2.csv').then((data) => {
+const stack = d3.stack()
+let columns
 
-    color.domain(d3.keys(data[0]).filter((key) => { 
-        return key !== 'date'; 
-    }));
-        
-    //TODO: obtain the keys array, remember to remove the first column
-    var keys = [];
+// Legend
+const legend = g.append("g").attr("transform", "translate(" + (width + 170) + "," + (height - 210) + ")")
 
-	data.forEach((d) => {
-	    d.date = parseDate(d.date);
-	}); 
 
-    var maxDateVal = d3.max(data, (d) => {
-        var vals = d3.keys(d).map((key) => { 
-            return key !== 'date' ? d[key] : 0 
-        });
-        return d3.sum(vals);
-    });
+// Obtain Data
+d3.csv('https://raw.githubusercontent.com/gcastillo56/d3Lab/master/charts/stacked_chart/data/stacked_area2.csv').then(data => {
+    parse(data)
 
-    x.domain(d3.extent(data, (d) => { return d.date; }));
-    y.domain([0, maxDateVal]);
+    // Config
+    columns = data.columns.filter(key => key !== 'date')
+    const max = d3.max(data, d => {
+        const vals = d3.keys(d).map(key => key !== 'date' ? d[key] : 0)
+        return d3.sum(vals)
+    })
 
-    // Generate axes once scales have been set
-    xAxis.call(xAxisCall.scale(x))
-    yAxis.call(yAxisCall.scale(y))
+    x.domain(d3.extent(data, d => d.date))
+    y.domain([max, 0])
+    color_scale.domain(columns)
 
-    // Add stacked area chart
-    // TODO: finish the configuration of the stack object
-    // by setting the keys, order and offset
+    // Stack Chart
+    stack.keys(columns)
+    	.order(d3.stackOrderNone)
+    	.offset(d3.stackOffsetNone)
 
-    // TODO: bind the data to the stack and create the group 
-    // that will contain the area path
+    const browser = g.selectAll('.browser')
+    	.data(stack(data))
+    	.enter().append('g')
+    	.attr('class', d => 'browser ' + d.key)
+    	.attr('fill-opacity', 0.5)
 
-    // TODO: call the area generator with the appropriate data
+    browser.append('path')
+    	.attr('class', 'area')
+    	.attr('d', area)
+    	.style('fill', d => color_scale(d.key))
 
-    // Create legend
-    // TODO: Create a legend showing all the names of every color
+    // Axis & Labels
+    configAxisAndLabels(x, y, "Billions of liters", "#fff")
 
-}).catch((error) => {
-    console.log(error);
-});
+}).catch(error => console.log(error))
+
+// Config Axis
+// ***********
+function configAxisAndLabels(x, y, yLabel, color) {
+
+  // Y Axis
+  y_axis.call(yAxis).selectAll("text").style("fill", color)
+
+  // X Axis
+  x_axis.call(xAxis).selectAll("text").style("fill", color)
+    .attr("y", "10").attr("x", "-5")
+    .attr("text-anchor", "end")
+    .attr("transform", "rotate(-45)")
+
+  // Axis Color
+  g.selectAll(".y.axis line").style("stroke", color)
+  g.selectAll(".y.axis path").style("stroke", color)
+  g.selectAll(".x.axis line").style("stroke", color)
+  g.selectAll(".x.axis path").style("stroke", color)
+
+  // Label
+  y_label.text(yLabel).style("fill", color)
+
+  // Legend
+  columns.reverse().forEach((country, i) => {
+  	const legendRow = legend.append("g").attr("transform", "translate(-15, " + ((i * 20)-30) + ")")
+  	legendRow.append("rect")
+  		.attr("width", 10)
+  		.attr("height", 10)
+  		.attr("fill", color_scale(country))
+  	legendRow.append("text")
+  	  .attr("class", "legend")
+  		.attr("x", -10)
+  		.attr("y", 10)
+  		.attr("text-anchor", "end")
+  		.style("text-transform", "capitalize")
+  		.text(country)
+  })
+
+  g.selectAll(".legend").style("fill", color)
+
+}
+
+// Parse Integers
+// **************
+function parse(data) {
+  data.forEach(item => {
+    Object.keys(item).forEach(curr => {
+      if (!isNaN(item[curr])) item[curr] = parseInt(item[curr])
+			if (curr === "date") item[curr] = parseDate(item[curr])
+    })
+  })
+  return data
+}
+
+// NOTES:
+// https://github.com/d3/d3-scale-chromatic
