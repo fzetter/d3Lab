@@ -56,7 +56,6 @@ d3.json("https://raw.githubusercontent.com/gcastillo56/d3Lab/master/charts/line_
 
     // Scale Domains
     const y_data = "value", x_data = "year"
-
     const x_ranges = d3.extent(data, d => d[x_data])
 		const y_max = d3.max(data, d => d[y_data])
 		x.domain(x_ranges)
