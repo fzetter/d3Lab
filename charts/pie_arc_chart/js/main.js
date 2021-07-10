@@ -1,138 +1,116 @@
-/*
+// Config
+const width = 800, height = 450, margin = 40
+const radius = Math.min(width, height) / 2 - margin
 
-    Adapted from Mike Bostock at bl.ocks.org
-    https://bl.ocks.org/mbostock/5682158
+const g = d3.select("#chart-area")
+	.append("svg")
+		.attr("width", width)
+		.attr("height", height)
+	.append("g")
+		.attr("transform", "translate(" + (width / 3) + "," + height / 2 + ")")
 
-*/
+// Scale, Arc Generator & Pie Layout
+const color = d3.scaleOrdinal().range(d3.schemeDark2)
+const arc = d3.arc().outerRadius(radius).innerRadius(0)
+const pie = d3.pie().value(d => d.value).sort(null)
 
-var margin ={top: 20, right: 300, bottom: 30, left: 50},
-    width = 800 - margin.left - margin.right,
-    height = 400 - margin.top - margin.bottom,
-    radius = Math.min(width, height) / 2;
+// Data
+let data1, data2
 
-var svg = d3.select("#chart-area").append("svg")
-	.attr("width", width + margin.left + margin.right)
-    .attr("height", height + margin.top + margin.bottom);
-var g = svg.append("g")
-    .attr("transform", 
-    	"translate(" + width / 2 + "," + height / 2 + ")");
+// Update
+function update(data) {
 
-var color = d3.scaleOrdinal(d3.schemeCategory10);
+  // Domain
+  color.domain(Object.keys(data))
 
-// TODO: create the arc generator for a donut chart.
-// var arc = ...
+  // Join
+  const chart = g.selectAll("path").data(pie(d3.entries(data)))
+  // Exit
+  chart.exit().remove()
+  // Enter & Update
+  chart.enter()
+    .append('path')
+    .merge(chart)
+    .transition().duration(1000)
+    .attr('d', arc)
+    .attr('fill', d => color(d.data.key))
+    .attr("stroke", "white")
+    .style("stroke-width", "2px")
+    .style("opacity", 1)
 
-// TODO: create the pie layout generator.
-// var pie = ...
+  // Legend
+  addLegend("#000")
 
-d3.tsv("data/donut2.tsv").then((data) => {
-    // TODO: Transform data to its proper format
-    // count -> number
-    // fruit -> lower case
-
-    console.log(data);
-    
-    // TODO: create the nest function to group by fruits
-    var regionsByFruit = null;
-
-    console.log(regionsByFruit)
-
-    var label = d3.select("form").selectAll("label")
-        .data(regionsByFruit)
-        .enter().append("label");
-
-    // Dynamically add radio buttons to select the fruit
-    label.append("input")
-        	.attr("type", "radio")
-        	.attr("name", "fruit")
-        	.attr("value", (d) => { return d.key; })
-        	.on("change", update)
-        .filter((d, i) => { return !i; })
-        	.each(update)
-        	.property("checked", true);
-
-    label.append("span")
-        .attr("fill", "red")
-        .text((d) => { return d.key; });
-
-}).catch((error) => {
-    console.log(error);
-});
-
-function update(region) {
-    var path = g.selectAll("path");
-
-    var data0 = path.data(),
-        data1 = pie(region.values);
-
-    // JOIN elements with new data.
-    path = path.data(data1, key);
-
-    // EXIT old elements from the screen.
-    path.exit()
-        .datum((d, i) => { 
-        	return findNeighborArc(i, data1, data0, key) || d; 
-        })
-        .transition()
-        .duration(750)
-        .attrTween("d", arcTween)
-        .remove();
-    
-    // UPDATE elements still on the screen.
-    path.transition()
-        .duration(750)
-        .attrTween("d", arcTween);
-
-    // ENTER new elements in the array.
-    path.enter()
-        .append("path")
-        .each((d, i) => { 
-        	this._current = 
-        		findNeighborArc(i, data0, data1, key) || d; 
-        }) 
-        .attr("fill", (d) => {  
-        	return color(d.data.region) 
-        })
-        .transition()
-        .duration(750)
-            .attrTween("d", arcTween);
 }
 
-function key(d) {
-    return d.data.region;
+// Add Legend
+function addLegend(textColor) {
+
+  const rectSize = 30, spacing = 10
+
+  let legend = g.selectAll('.legend').data(color.domain())
+
+  legend.exit().remove()
+
+  legend.enter()
+    .append('g')
+    .merge(legend)
+    .attr('class', 'legend')
+    .attr('transform', function(d, i) {
+      const height = rectSize + spacing
+      const offset =  height * color.domain().length / 2
+      const horz = width / 2
+      const vert = i * height - offset
+      return 'translate(' + horz + ',' + vert + ')'
+    })
+    .append('rect')
+      .attr('width', rectSize)
+      .attr('height', rectSize)
+      .style('fill', color)
+      .style('stroke', color)
+
+    g.selectAll('.legend').append('text')
+      .merge(legend)
+      .attr('x', spacing - rectSize * 2.9)
+      .attr('y', rectSize - spacing)
+      .style('fill', textColor)
+      .text(d => d)
+
 }
 
-function findNeighborArc(i, data0, data1, key) {
-    var d;
-    return (d = findPreceding(i, data0, data1, key)) ? {startAngle: d.endAngle, endAngle: d.endAngle}
-        : (d = findFollowing(i, data0, data1, key)) ? {startAngle: d.startAngle, endAngle: d.startAngle}
-        : null;
+// Data
+d3.tsv("https://raw.githubusercontent.com/gcastillo56/d3Lab/master/charts/pie_arc_chart/data/donut2.tsv").then(data => {
+    parse(data)
+
+    const byFruit = d3.nest().key(d => d.fruit).entries(data)
+    const fruits = byFruit.map(fruit => fruit.key)
+    const byRegion = d3.nest().key(d => d.region).entries(data)
+    const byRegionData = byRegion.map(curr => curr.values)
+
+    // Fruits
+    fruits.forEach(fruit => {
+      let obj = {}
+      byRegionData.map(region => {
+        sum = 0
+        region.forEach(curr => sum += (curr.fruit === fruit ? curr.count : 0))
+        obj[region[0].region] = sum
+      })
+      if (fruit === "Apples") data1 = obj
+      else data2 = obj
+    })
+
+    update(data1)
+}).catch(error => console.log(error))
+
+// Parse Data
+function parse(data) {
+  data.forEach(item => {
+    Object.keys(item).forEach(curr => {
+      if (!isNaN(item[curr])) item[curr] = parseFloat(item[curr])
+    })
+  })
+  return data
 }
 
-// Find the element in data0 that joins the highest preceding element in data1.
-function findPreceding(i, data0, data1, key) {
-    var m = data0.length;
-    while (--i >= 0) {
-        var k = key(data1[i]);
-        for (var j = 0; j < m; ++j) {
-            if (key(data0[j]) === k) return data0[j];
-        }
-    }
-}
-
-// Find the element in data0 that joins the lowest following element in data1.
-function findFollowing(i, data0, data1, key) {
-    var n = data1.length, m = data0.length;
-    while (++i < n) {
-        var k = key(data1[i]);
-        for (var j = 0; j < m; ++j) {
-            if (key(data0[j]) === k) return data0[j];
-        }
-    }
-}
-
-function arcTween(d) {
-    var i = d3.interpolate(this._current, d);
-    this._current = i(1)
-    return (t) => { return arc(i(t)); };
-}
+// NOTES:
+// https://github.com/d3/d3-scale-chromatic

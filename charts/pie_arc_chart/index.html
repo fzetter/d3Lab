@@ -1,46 +1,64 @@
-<!-- 
 
-    Adapted from Mike Bostock at bl.ocks.org
-    https://bl.ocks.org/mbostock/5682158
+<!doctype html>
+<html>
+    <!-- HEAD -->
+    <!-- **** -->
+    <head>
+        <meta charset="utf-8">
+        <meta name="description" content="">
+        <title>Pie/Donut Chart</title>
+        <link rel="stylesheet" href="css/bootstrap.min.css">
+        <link rel="stylesheet" href="css/jquery-ui.min.css">
+        <link rel="stylesheet" href="css/jquery-ui.structure.min.css">
+        <link rel="stylesheet" href="css/jquery-ui.theme.min.css">
+        <link rel="stylesheet" href="css/style.css">
+    </head>
 
- -->
+    <!-- BODY -->
+    <!-- **** -->
+    <body>
 
-<!DOCTYPE html>
-<head>
-    <meta charset="utf-8">
-    <meta name="description" content="">
-    <title>Pie and donut charts</title>
-    <!-- Bootstrap Core CSS -->
-    <link rel="stylesheet" href="css/bootstrap.min.css">
-    <!-- Custom CSS -->
-    <link rel="stylesheet" href="css/style.css">
-</head>
-<body>
-    <nav class="navbar navbar-default">
+        <!-- Navbar -->
+        <nav class="navbar navbar-default">
+            <div class="container">
+                <h3 class="title">D3 Labs | Pie & Donut Charts</h3>
+            </div>
+        </nav>
+
+
+        <!-- Buttons -->
         <div class="container">
-           
-        </div>
-    </nav>
-
-    <!-- Bootstrap grid setup -->
-    <div class="container">
-        <div class="row">
-            <div class="col-md-4">
-                <form></form>
-            </div>
-         </div>
           <div class="row">
-            <div class="col-md-12">
-                <div id="chart-area"></div>                  
+
+            <div class="col-xs-1">
+              <button onclick="update(data1)">Apples</button>
+            </div>
+
+            <div class="col-xs-1">
+              <button onclick="update(data2)">Oranges</button>
+            </div>
+
+            <div class="col-xs-10"></div>
+
+          </div>
+        </div>
+
+        <!-- Graph -->
+        <div class="container">
+            <div class="row">
+                <div class="col-md-12">
+                    <div id="chart-area"></div>
+                </div>
             </div>
         </div>
-    </div>
 
-<!-- External JS libraries -->
-<script src="js/jquery.min.js"></script>
-<script src="js/bootstrap.min.js"></script>
-<script src="js/d3.min.js"></script>
-<!-- Custom JS -->
-<script src="js/main.js"></script>
+    <!-- SCRIPTS -->
+    <!-- ****** -->
+    <script src="js/jquery.min.js"></script>
+    <script src="js/bootstrap.min.js"></script>
+    <script src="js/jquery-ui.min.js"></script>
+    <script src="js/d3.min.js"></script>
+    <script src="js/main.js"></script>
 
-</body>
+    </body>
+</html>

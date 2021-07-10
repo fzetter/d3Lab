@@ -1,11 +1,27 @@
 svg {
-    margin-left: auto;
-    margin-right: auto;
-    display: block;
+	margin-left: auto;
+  margin-right: auto;
+  display: block;
+	background-color: #EFEFEF;
+  margin-top: 5em;
 }
 
 body {
-    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+	background-color: #EFEFEF;
+}
+
+.navbar {
+	background-color: #033787;
+	border: none;
+	border-radius: 0;
+	padding: 1em;
+}
+
+.title {
+  font-family: sans-serif;
+  font-weight: 100;
+  margin-left: 3em;
+  color: white;
 }
 
 text {
@@ -13,13 +29,23 @@ text {
 }
 
 form {
-    float:right;
+    float: right;
 }
 
 label {
-    padding-right:10px;
+    padding-right: 10px;
 }
 
 input {
     margin: 0 7px;
+}
+
+.legend text {
+  font-size: 18px;
+  font-family: sans-serif;
+  font-weight: 100;
+}
+
+button {
+  width: 90px;
 }
